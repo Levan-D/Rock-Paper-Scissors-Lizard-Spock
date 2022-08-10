@@ -1,0 +1,280 @@
+/** @format */
+body {
+  margin: 0;
+  padding: 0;
+  user-select: none;
+  color: white;
+  background-color: rgb(58, 28, 83);
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+.GameContainer {
+  margin: 2rem auto;
+  padding: 4rem 2rem;
+  display: flex;
+  width: 1000px;
+  color: white;
+  background-color: rgb(0, 0, 0);
+  border-radius: 20px;
+  box-shadow: 0px 0px 50px 20px rgb(255, 255, 255);
+}
+.gameContainerP1 {
+  box-shadow: 0px 0px 110px 20px #3253e6;
+  transition: 0.5s;
+}
+.gameContainerP2 {
+  box-shadow: 0px 0px 110px 20px #e63832;
+  transition: 0.5s;
+}
+.gameContainerDraw {
+  box-shadow: 40px 40px 80px 10px #e63832, -40px -40px 80px 10px #3253e6;
+  transition: 0.5s;
+}
+.innerTextWrapper {
+  width: 300px;
+  text-align: center;
+  position: absolute;
+  font-size: 1.6rem;
+  top: 300px;
+  left: 50%;
+  transform: translate(-50%);
+  line-height: 50px;
+}
+.winningText {
+  font-size: 2rem;
+}
+img {
+  width: 150px;
+  cursor: pointer;
+}
+.CoinsContainer {
+  width: 600px;
+}
+.Coin {
+  display: inline-block;
+}
+.Rock {
+  margin: 0 225px;
+  transition: 0.2s;
+}
+.Rock:hover {
+  filter: brightness(1.1) drop-shadow(0 0 0.75rem #ffb5e8);
+  transform: scale(1.1);
+}
+
+.Paper {
+  margin: 20px 300px 80px 0;
+  transition: 0.2s;
+}
+.Paper:hover {
+  filter: brightness(1.1) drop-shadow(0 0 0.75rem #85e3ff);
+  transform: scale(1.1);
+}
+.Scissors {
+  margin: 20px 0 80px 0;
+  transition: 0.2s;
+}
+.Scissors:hover {
+  filter: brightness(1.1) drop-shadow(0 0 0.75rem #c5a3ff);
+  transform: scale(1.1);
+}
+.Lizard {
+  margin: 0 120px 0 90px;
+  transition: 0.2s;
+}
+.Lizard:hover {
+  filter: brightness(1.1) drop-shadow(0 0 0.75rem #dbffd6);
+  transform: scale(1.1);
+}
+.Spock {
+  margin: 0;
+  transition: 0.2s;
+}
+.Spock:hover {
+  filter: brightness(1.1) drop-shadow(0 0 0.75rem #6eb5ff);
+  transform: scale(1.1);
+}
+.PlayerCard {
+  margin: 6rem 2rem;
+  width: 130px;
+  height: 350px;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  border: solid white 3px;
+  border-radius: 20px;
+  line-height: 50px;
+}
+.PlayerCardMargin {
+  margin: 3rem 0 0 0;
+}
+.rules {
+  width: 600px;
+  font-size: 1.5rem;
+  margin: auto;
+}
+.rules h3 {
+  text-align: center;
+}
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 3rem 0 0;
+}
+.ruleWrapper {
+  display: flex;
+}
+/* loading */
+.loading {
+  display: inline-block;
+}
+.loading div {
+  position: absolute;
+  border: 10px solid #e63832;
+  opacity: 1;
+  border-radius: 50%;
+  animation: loading 1.5s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+}
+.loading div:nth-child(2) {
+  animation-delay: -0.5s;
+}
+.bigBrain {
+  color: #e63832;
+  font-size: 1.8rem;
+  width: 300px;
+  position: relative;
+  top: 110px;
+  left: -100px;
+}
+.loadingWrapper {
+  text-align: center;
+  position: absolute;
+  width: 120px;
+  height: 120px;
+  left: 50%;
+  top: 300px;
+  transform: translate(-50%) scale(1);
+}
+@keyframes loading {
+  0% {
+    top: 50px;
+    left: 50px;
+    width: 0;
+    height: 0;
+    opacity: 0;
+  }
+  4.9% {
+    top: 50px;
+    left: 50px;
+    width: 0;
+    height: 0;
+    opacity: 0;
+  }
+  5% {
+    top: 50px;
+    left: 50px;
+    width: 0;
+    height: 0;
+    opacity: 1;
+  }
+  100% {
+    top: 0px;
+    left: 0px;
+    width: 100px;
+    height: 100px;
+    opacity: 0;
+  }
+}
+/* loading */
+
+/* thinking */
+.pulseClassBlue {
+  animation: pulse 2s infinite ease-in-out alternate;
+  filter: brightness(1.1) drop-shadow(0 0 2rem #3286e6);
+}
+.pulseClassRed {
+  animation: pulse 2s infinite ease-in-out alternate;
+  filter: brightness(1.1) drop-shadow(0 0 2rem #e63832);
+}
+.pulseClassDraw {
+  animation: pulse 2s infinite ease-in-out alternate;
+  filter: brightness(1.1) drop-shadow(1rem 0 1rem #e63832)
+    drop-shadow(-1rem 0 1rem #3253e6);
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1.2) rotate(-15deg);
+  }
+  50% {
+    transform: rotate(15deg);
+  }
+  100% {
+    transform: scale(1.1) rotate(-15deg);
+  }
+}
+/* thinking */
+/* results */
+.dimmer {
+  opacity: 0.2;
+}
+
+.winnerP1 {
+  animation: winner 3s infinite linear;
+  filter: brightness(1.1) drop-shadow(0 0 2rem #3253e6);
+}
+.winnerP2 {
+  animation: winner 2s infinite linear;
+  filter: brightness(1.1) drop-shadow(0 0 2rem #e63832);
+}
+@keyframes winner {
+  0% {
+    transform: rotate(0deg) scale(1.3);
+  }
+  10% {
+    transform: rotate(-50deg) scale(1.2);
+  }
+  20% {
+    transform: rotate(-15deg) scale(1.3);
+  }
+  30% {
+    transform: rotate(-50deg) scale(1.2);
+  }
+  40% {
+    transform: rotate(0deg) scale(1.3);
+  }
+  50% {
+    transform: rotate(50deg) scale(1.2);
+  }
+  60% {
+    transform: rotate(15deg) scale(1.3);
+  }
+  70% {
+    transform: rotate(50deg) scale(1.2);
+  }
+  80% {
+    transform: rotate(50deg) scale(1.2);
+  }
+  100% {
+    transform: rotate(360deg) scale(1.2);
+  }
+}
+
+.loser {
+  animation: loser 4s linear;
+}
+@keyframes loser {
+  0% {
+    transform: scale(1.3);
+  }
+  50% {
+    transform: scale(0);
+    filter: brightness(0);
+  }
+  100% {
+    transform: scale(0);
+    filter: brightness(0);
+  }
+}
+/* results */

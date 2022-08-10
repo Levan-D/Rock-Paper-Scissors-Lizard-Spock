@@ -1,0 +1,67 @@
+[
+    {
+      "name": "Rock",
+      "beats": [
+        {
+          "element": "Scissors",
+          "text": "crushes"
+        },
+        {
+          "element": "Lizard",
+          "text": "crushes"
+        }
+      ]
+    },
+    {
+      "name": "Paper",
+      "beats": [
+        {
+          "element": "Rock",
+          "text": "covers"
+        },
+        {
+          "element": "Spock",
+          "text": "disproves"
+        }
+      ]
+    },
+    {
+      "name": "Scissors",
+      "beats": [
+        {
+          "element": "Lizard",
+          "text": "decapitate"
+        },
+        {
+          "element": "Paper",
+          "text": "cut"
+        }
+      ]
+    },
+    {
+      "name": "Lizard",
+      "beats": [
+        {
+          "element": "Paper",
+          "text": "eats"
+        },
+        {
+          "element": "Spock",
+          "text": "poisons"
+        }
+      ]
+    },
+    {
+      "name": "Spock",
+      "beats": [
+        {
+          "element": "Rock",
+          "text": "vaporizes"
+        },
+        {
+          "element": "Scissors",
+          "text": "smashes"
+        }
+      ]
+    }
+  ]
