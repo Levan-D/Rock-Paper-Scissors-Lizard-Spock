@@ -3,6 +3,7 @@
 import data from "../data/data.json";
 import React, { useState, useEffect, useReducer } from "react";
 import reducer from "./logic/reducer";
+import ACTIONS from "./logic/ACTIONS";
 import Coin from "./Coin";
 import PlayerCard from "./PlayerCard";
 import Lizard from "../images/Lizard.png";
@@ -26,6 +27,7 @@ function GameContainer() {
       resultText: "Pick any symbol to start",
     },
   });
+
   function mergedData() {
     const array = [];
     data.map((x, i) => array.push({ ...x, image: images[i] }));
@@ -35,42 +37,50 @@ function GameContainer() {
   useEffect(() => {
     if (gameVariables.gameState === "gameOver") {
       dispatch({
-        type: "playerOnePicks",
+        type: ACTIONS.PLAYERONEPICKS,
         data: "",
       });
       dispatch({
-        type: "playerTwoPicks",
+        type: ACTIONS.PLAYERTWOPICKS,
         data: "",
+      });
+      dispatch({
+        type: ACTIONS.PLAYERONESHOW,
+        data: false,
+      });
+      dispatch({
+        type: ACTIONS.PLAYERTWOSHOW,
+        data: false,
       });
       if (
         gameVariables.playerOneState.score > 0 ||
         gameVariables.playerTwoState.score > 0
       )
-        dispatch({ type: "iTAgain" });
+        dispatch({ type: ACTIONS.ITAGAIN });
     } else if (gameVariables.gameState === "thinking") {
       setTimeout(() => {
-        dispatch({ type: "results" });
+        dispatch({ type: ACTIONS.RESULTS });
       }, 2000);
     } else if (gameVariables.gameState == "results") {
       dispatch({
-        type: "playerTwoShow",
+        type: ACTIONS.PLAYERTWOSHOW,
         data: true,
       });
 
       if (gameVariables.loser === gameVariables.playerOneState.pick) {
-        dispatch({ type: "playerTwoScore" });
-        dispatch({ type: "iTP2" });
+        dispatch({ type: ACTIONS.PLAYERTWOSCORE });
+        dispatch({ type: ACTIONS.ITP2 });
       } else if (gameVariables.loser === gameVariables.playerTwoState.pick) {
-        dispatch({ type: "playerOneScore" });
-        dispatch({ type: "iTP1" });
+        dispatch({ type: ACTIONS.PLAYERONESCORE });
+        dispatch({ type: ACTIONS.ITP1 });
       } else if (
         gameVariables.playerTwoState.pick === gameVariables.playerOneState.pick
       ) {
-        dispatch({ type: "iTD" });
+        dispatch({ type: ACTIONS.ITD });
       }
 
       setTimeout(() => {
-        dispatch({ type: "gameOver" });
+        dispatch({ type: ACTIONS.GAMEOVER });
       }, 2000);
     }
   }, [gameVariables.gameState]);
@@ -81,7 +91,7 @@ function GameContainer() {
     } else if (
       gameVariables.playerOneState.pick === gameVariables.playerTwoState.pick
     ) {
-      dispatch({ type: "loser", data: "Draw!" });
+      dispatch({ type: ACTIONS.LOSER, data: "Draw!" });
       return;
     }
     for (let item of populate) {
@@ -97,10 +107,10 @@ function GameContainer() {
   function calculateResults(item, player) {
     for (let win of item.beats) {
       if (win.element === player) {
-        dispatch({ type: "loser", data: player });
+        dispatch({ type: ACTIONS.LOSER, data: player });
 
         dispatch({
-          type: "winText",
+          type: ACTIONS.WINTEXT,
           data: win.text,
         });
         return;
@@ -136,23 +146,23 @@ function GameContainer() {
 
   function startGame(e) {
     dispatch({
-      type: "playerOnePicks",
+      type: ACTIONS.PLAYERONEPICKS,
       data: e.target.classList[0],
     });
     dispatch({
-      type: "playerTwoPicks",
+      type: ACTIONS.PLAYERTWOPICKS,
       data: populate[Math.floor(Math.random() * populate.length)].name,
     });
 
     dispatch({
-      type: "playerOneShow",
+      type: ACTIONS.PLAYERONESHOW,
       data: true,
     });
     dispatch({
-      type: "playerTwoShow",
+      type: ACTIONS.PLAYERTWOSHOW,
       data: false,
     });
-    dispatch({ type: "thinking" });
+    dispatch({ type: ACTIONS.THINKING });
   }
 
   const coins = populate.map((x, i) => (
@@ -168,6 +178,7 @@ function GameContainer() {
       loser={gameVariables.loser}
     />
   ));
+  console.log(gameVariables.playerOneState.show);
   return (
     <div className={`GameContainer ${containerGlow}`}>
       <PlayerCard

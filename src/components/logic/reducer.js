@@ -1,6 +1,8 @@
+import ACTIONS from "./ACTIONS";
+
 function reducer(gameVariables, action) {
   switch (action.type) {
-    case "playerOneScore":
+    case ACTIONS.PLAYERONESCORE:
       return {
         ...gameVariables,
         playerOneState: {
@@ -8,7 +10,7 @@ function reducer(gameVariables, action) {
           score: gameVariables.playerOneState.score + 1,
         },
       };
-    case "playerTwoScore":
+    case ACTIONS.PLAYERTWOSCORE:
       return {
         ...gameVariables,
         playerTwoState: {
@@ -16,7 +18,7 @@ function reducer(gameVariables, action) {
           score: gameVariables.playerTwoState.score + 1,
         },
       };
-    case "playerOnePicks":
+    case ACTIONS.PLAYERONEPICKS:
       return {
         ...gameVariables,
         playerOneState: {
@@ -24,7 +26,7 @@ function reducer(gameVariables, action) {
           pick: action.data,
         },
       };
-    case "playerTwoPicks":
+    case ACTIONS.PLAYERTWOPICKS:
       return {
         ...gameVariables,
         playerTwoState: {
@@ -32,7 +34,7 @@ function reducer(gameVariables, action) {
           pick: action.data,
         },
       };
-    case "playerOneShow":
+    case ACTIONS.PLAYERONESHOW:
       return {
         ...gameVariables,
         playerOneState: {
@@ -40,7 +42,7 @@ function reducer(gameVariables, action) {
           show: action.data,
         },
       };
-    case "playerTwoShow":
+    case ACTIONS.PLAYERTWOSHOW:
       return {
         ...gameVariables,
         playerTwoState: {
@@ -48,26 +50,26 @@ function reducer(gameVariables, action) {
           show: action.data,
         },
       };
-    case "gameOver":
+    case ACTIONS.GAMEOVER:
       return {
         ...gameVariables,
         gameState: "gameOver",
       };
-    case "thinking":
+    case ACTIONS.THINKING:
       return {
         ...gameVariables,
         gameState: "thinking",
       };
-    case "results":
+    case ACTIONS.RESULTS:
       return {
         ...gameVariables,
         gameState: "results",
       };
-    case "loser":
+    case ACTIONS.LOSER:
       return { ...gameVariables, loser: action.data };
-    case "winText":
+    case ACTIONS.WINTEXT:
       return { ...gameVariables, winText: action.data };
-    case "iTDefault":
+    case ACTIONS.ITDEFAULT:
       return {
         ...gameVariables,
         innerText: {
@@ -75,7 +77,7 @@ function reducer(gameVariables, action) {
           resultText: "Pick any symbol to start",
         },
       };
-    case "iTP1":
+    case ACTIONS.ITP1:
       return {
         ...gameVariables,
         innerText: {
@@ -83,7 +85,7 @@ function reducer(gameVariables, action) {
           resultText: `${gameVariables.playerOneState.pick} ${gameVariables.winText} ${gameVariables.playerTwoState.pick}!`,
         },
       };
-    case "iTP2":
+    case ACTIONS.ITP2:
       return {
         ...gameVariables,
         innerText: {
@@ -91,7 +93,7 @@ function reducer(gameVariables, action) {
           resultText: `${gameVariables.playerTwoState.pick} ${gameVariables.winText} ${gameVariables.playerOneState.pick}!`,
         },
       };
-    case "iTD":
+    case ACTIONS.ITD:
       return {
         ...gameVariables,
         innerText: {
@@ -99,7 +101,7 @@ function reducer(gameVariables, action) {
           resultText: "Face your opponent again!",
         },
       };
-    case "iTAgain":
+    case ACTIONS.ITAGAIN:
       return {
         ...gameVariables,
         innerText: {
