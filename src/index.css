@@ -31,6 +31,10 @@ body {
   box-shadow: 40px 40px 80px 10px #e63832, -40px -40px 80px 10px #3253e6;
   transition: 0.5s;
 }
+.gameContainerDefault {
+  box-shadow: 0px 0px 50px 20px rgb(255, 255, 255);
+  transition: 0.5s;
+}
 .innerTextWrapper {
   width: 300px;
   text-align: center;

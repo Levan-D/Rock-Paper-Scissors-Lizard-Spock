@@ -1,127 +1,158 @@
 /** @format */
 
-import data from "../data/data.json"
-import React, { useState, useEffect } from "react"
-import Coin from "./Coin"
-import PlayerCard from "./PlayerCard"
-import Lizard from "../images/Lizard.png"
-import Paper from "../images/Paper.png"
-import Rock from "../images/Rock.png"
-import Scissors from "../images/Scissors.png"
-import Spock from "../images/Spock.png"
+import data from "../data/data.json";
+import React, { useState, useEffect, useReducer } from "react";
+import reducer from "./logic/reducer";
+import Coin from "./Coin";
+import PlayerCard from "./PlayerCard";
+import Lizard from "../images/Lizard.png";
+import Paper from "../images/Paper.png";
+import Rock from "../images/Rock.png";
+import Scissors from "../images/Scissors.png";
+import Spock from "../images/Spock.png";
 
 function GameContainer() {
-  const images = [Rock, Paper, Scissors, Lizard, Spock]
-  const [populate, setPopulate] = useState(mergedData())
-  const [gameState, setGameState] = useState("gameOver")
-  const [containerGlow, setContainerGlow] = useState("")
-  const [loser, setLoser] = useState("")
-  const [winText, setWinText] = useState("")
-  const [score, setScore] = useState({ playerOne: 0, playerTwo: 0 })
-  const [picks, setPicks] = useState([
-    { playerOnePick: "", show: false },
-    { playerTwoPick: "", show: false },
-  ])
-  const [innerText, setInnerText] = useState({
-    winningText: "Ready?",
-    resultText: "Pick any symbol to start",
-  })
+  const images = [Rock, Paper, Scissors, Lizard, Spock];
+  const [populate, setPopulate] = useState(mergedData());
+  const [containerGlow, setContainerGlow] = useState("gameContainerDefault");
+  const [gameVariables, dispatch] = useReducer(reducer, {
+    gameState: "gameOver",
+    loser: "",
+    winText: "",
+    playerOneState: { pick: "", show: false, score: 0 },
+    playerTwoState: { pick: "", show: false, score: 0 },
+    innerText: {
+      winningText: "Ready?",
+      resultText: "Pick any symbol to start",
+    },
+  });
   function mergedData() {
-    const array = []
-    data.map((x, i) => array.push({ ...x, image: images[i] }))
-    return array
+    const array = [];
+    data.map((x, i) => array.push({ ...x, image: images[i] }));
+    return array;
   }
 
   useEffect(() => {
-    if (gameState === "gameOver") {
-      setLoser("")
-      setPicks([
-        { playerOnePick: "", show: false },
-        { playerTwoPick: "", show: false },
-      ])
-      if (score.playerOne > 0 || score.playerTwo > 0)
-        setInnerText({
-          winningText: "Again?",
-        })
-    } else if (gameState === "thinking") {
+    if (gameVariables.gameState === "gameOver") {
+      dispatch({
+        type: "playerOnePicks",
+        data: "",
+      });
+      dispatch({
+        type: "playerTwoPicks",
+        data: "",
+      });
+      if (
+        gameVariables.playerOneState.score > 0 ||
+        gameVariables.playerTwoState.score > 0
+      )
+        dispatch({ type: "iTAgain" });
+    } else if (gameVariables.gameState === "thinking") {
       setTimeout(() => {
-        setGameState("results")
-      }, 2000)
-    } else if (gameState == "results") {
-      setPicks([{ ...picks[0] }, { ...picks[1], show: true }])
-      if (loser == picks[0].playerOnePick) {
-        setScore({ ...score, playerTwo: score.playerTwo + 1 })
-        setInnerText({
-          winningText: "Computer Wins!",
-          resultText: `${picks[1].playerTwoPick} ${winText} ${picks[0].playerOnePick}!`,
-        })
-      } else if (loser == picks[1].playerTwoPick) {
-        setScore({ ...score, playerOne: score.playerOne + 1 })
-        setInnerText({
-          winningText: "Player Wins!",
-          resultText: `${picks[0].playerOnePick} ${winText} ${picks[1].playerTwoPick}!`,
-        })
-      } else if (picks[1].playerTwoPick == picks[0].playerOnePick) {
-        setInnerText({
-          winningText: "Draw!",
-          resultText: "Face your opponent again!",
-        })
+        dispatch({ type: "results" });
+      }, 2000);
+    } else if (gameVariables.gameState == "results") {
+      dispatch({
+        type: "playerTwoShow",
+        data: true,
+      });
+
+      if (gameVariables.loser === gameVariables.playerOneState.pick) {
+        dispatch({ type: "playerTwoScore" });
+        dispatch({ type: "iTP2" });
+      } else if (gameVariables.loser === gameVariables.playerTwoState.pick) {
+        dispatch({ type: "playerOneScore" });
+        dispatch({ type: "iTP1" });
+      } else if (
+        gameVariables.playerTwoState.pick === gameVariables.playerOneState.pick
+      ) {
+        dispatch({ type: "iTD" });
       }
 
       setTimeout(() => {
-        setGameState("gameOver")
-      }, 2000)
+        dispatch({ type: "gameOver" });
+      }, 2000);
     }
-  }, [gameState])
+  }, [gameVariables.gameState]);
 
   useEffect(() => {
-    if (picks[0].playerOnePick == "") {
-      return
-    } else if (picks[0].playerOnePick == picks[1].playerTwoPick) {
-      setLoser("Draw!")
-      return
+    if (gameVariables.playerOneState.pick === "") {
+      return;
+    } else if (
+      gameVariables.playerOneState.pick === gameVariables.playerTwoState.pick
+    ) {
+      dispatch({ type: "loser", data: "Draw!" });
+      return;
     }
     for (let item of populate) {
-      if (item.name === picks[1].playerTwoPick) {
-        calculateResults(item, picks[0].playerOnePick)
+      if (item.name === gameVariables.playerTwoState.pick) {
+        calculateResults(item, gameVariables.playerOneState.pick);
       }
-      if (item.name === picks[0].playerOnePick) {
-        calculateResults(item, picks[1].playerTwoPick)
+      if (item.name === gameVariables.playerOneState.pick) {
+        calculateResults(item, gameVariables.playerTwoState.pick);
       }
     }
-  }, [picks])
-
-  useEffect(() => {
-    if (loser === "Draw!") {
-      setContainerGlow("gameContainerDraw")
-    } else if (loser === picks[0].playerOnePick && loser !== "") {
-      setContainerGlow("gameContainerP2")
-    } else if (loser === picks[0].playerTwoPick && loser !== "") {
-      setContainerGlow("gameContainerP1")
-    } else setContainerGlow("")
-  }, [gameState])
+  }, [gameVariables.playerOneState, gameVariables.playerTwoState]);
 
   function calculateResults(item, player) {
     for (let win of item.beats) {
       if (win.element === player) {
-        setLoser(player)
-        setWinText(win.text)
-        // resultText.innerText = player != Player1Dom[0] ? `${Player1Dom[0]} ${win.text} ${Player2Dom[0]}` : `${Player2Dom[0]} ${win.text} ${Player1Dom[0]}`;
-        // winner = player != Player1Dom[0] ? 1 : 2;
-        return
+        dispatch({ type: "loser", data: player });
+
+        dispatch({
+          type: "winText",
+          data: win.text,
+        });
+        return;
       }
     }
   }
 
+  useEffect(() => {
+    if (
+      gameVariables.gameState === "gameOver" ||
+      gameVariables.gameState === "thinking"
+    ) {
+      setContainerGlow("gameContainerDefault");
+    } else if (
+      gameVariables.loser === "Draw!" &&
+      gameVariables.gameState === "results"
+    ) {
+      setContainerGlow("gameContainerDraw");
+    } else if (
+      gameVariables.loser === gameVariables.playerOneState.pick &&
+      gameVariables.loser !== "" &&
+      gameVariables.gameState === "results"
+    ) {
+      setContainerGlow("gameContainerP2");
+    } else if (
+      gameVariables.loser === gameVariables.playerTwoState.pick &&
+      gameVariables.loser !== "" &&
+      gameVariables.gameState === "results"
+    ) {
+      setContainerGlow("gameContainerP1");
+    }
+  }, [gameVariables.gameState]);
+
   function startGame(e) {
-    setPicks([
-      { playerOnePick: e.target.classList[0], show: true },
-      {
-        playerTwoPick: populate[Math.floor(Math.random() * populate.length)].name,
-        show: false,
-      },
-    ])
-    setGameState("thinking")
+    dispatch({
+      type: "playerOnePicks",
+      data: e.target.classList[0],
+    });
+    dispatch({
+      type: "playerTwoPicks",
+      data: populate[Math.floor(Math.random() * populate.length)].name,
+    });
+
+    dispatch({
+      type: "playerOneShow",
+      data: true,
+    });
+    dispatch({
+      type: "playerTwoShow",
+      data: false,
+    });
+    dispatch({ type: "thinking" });
   }
 
   const coins = populate.map((x, i) => (
@@ -131,30 +162,32 @@ function GameContainer() {
       beats={x.beats}
       image={x.image}
       onClick={startGame}
-      playerOne={picks[0].playerOnePick}
-      playerTwo={picks[1].playerTwoPick}
-      gameState={gameState}
-      loser={loser}
+      playerOne={gameVariables.playerOneState.pick}
+      playerTwo={gameVariables.playerTwoState.pick}
+      gameState={gameVariables.gameState}
+      loser={gameVariables.loser}
     />
-  ))
+  ));
   return (
     <div className={`GameContainer ${containerGlow}`}>
       <PlayerCard
-        score={score.playerOne}
+        score={gameVariables.playerOneState.score}
         player={"Player"}
-        choice={picks[0].playerOnePick}
-        show={picks[0].show}
+        choice={gameVariables.playerOneState.pick}
+        show={gameVariables.playerOneState.show}
       />
 
       <div className="CoinsContainer">{coins}</div>
-      {gameState != "thinking" && (
+      {gameVariables.gameState != "thinking" && (
         <div className="innerTextWrapper">
-          <div className="winningText">{innerText.winningText}</div>
-          <div className="resultText">{innerText.resultText}</div>
+          <div className="winningText">
+            {gameVariables.innerText.winningText}
+          </div>
+          <div className="resultText">{gameVariables.innerText.resultText}</div>
         </div>
       )}
 
-      {gameState == "thinking" && (
+      {gameVariables.gameState === "thinking" && (
         <div className="loadingWrapper">
           <div className="loading">
             <div></div>
@@ -165,13 +198,13 @@ function GameContainer() {
       )}
 
       <PlayerCard
-        score={score.playerTwo}
+        score={gameVariables.playerTwoState.score}
         player={"Computer"}
-        choice={picks[1].playerTwoPick}
-        show={picks[1].show}
+        choice={gameVariables.playerTwoState.pick}
+        show={gameVariables.playerTwoState.show}
       />
     </div>
-  )
+  );
 }
 
-export default GameContainer
+export default GameContainer;

@@ -1,66 +1,12 @@
 /** @format */
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect } from "react";
+import classRenderLogic from "./logic/classRenderLogic";
 
 function Coin(props) {
-  const [classes, setClasses] = useState("")
+  const [classes, setClasses] = useState("");
   useEffect(() => {
-    if (props.gameState === "thinking" && props.name === props.playerOne) {
-      setClasses("pulseClassBlue")
-    }
-
-    if (
-      props.gameState === "results" &&
-      props.loser === "Draw!" &&
-      props.name === props.playerOne &&
-      props.name === props.playerTwo
-    ) {
-      setClasses("pulseClassDraw")
-    }
-
-    if (
-      props.gameState === "results" &&
-      props.loser !== "Draw!" &&
-      props.name !== props.loser &&
-      props.name === props.playerOne
-    ) {
-      setClasses("winnerP1")
-    } else if (
-      props.gameState === "results" &&
-      props.loser !== "Draw!" &&
-      props.name === props.loser &&
-      props.name === props.playerTwo
-    ) {
-      setClasses("loser")
-    }
-
-    if (
-      props.gameState === "results" &&
-      props.loser !== "Draw!" &&
-      props.name !== props.loser &&
-      props.name === props.playerTwo
-    ) {
-      setClasses("winnerP2")
-    } else if (
-      props.gameState === "results" &&
-      props.loser !== "Draw!" &&
-      props.name === props.loser &&
-      props.name === props.playerOne
-    ) {
-      setClasses("loser")
-    }
-
-    if (
-      props.gameState === "results" &&
-      props.name !== props.playerTwo &&
-      props.name !== props.playerOne
-    ) {
-      setClasses("dimmer")
-    }
-
-    if (props.gameState === "gameOver") {
-      setClasses("")
-    }
-  }, [props.gameState])
+    classRenderLogic(props, setClasses);
+  }, [props.gameState]);
 
   return (
     <div className="Coin">
@@ -72,7 +18,7 @@ function Coin(props) {
         />
       </div>
     </div>
-  )
+  );
 }
 
-export default Coin
+export default Coin;

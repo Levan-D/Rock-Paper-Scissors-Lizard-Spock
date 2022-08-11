@@ -22,7 +22,7 @@ function Rules() {
         </ul>
       </div>
     </div>
-  )
+  );
 }
 
-export default Rules
+export default Rules;
